@@ -1,0 +1,17 @@
+# Relevant files
+!lib/**
+
+# Unrelevant files
+src/**
+.gitignore
+.github/
+.vscode/
+package-lock.json
+tsconfig.json
+docs/
+demo/
+lib/**/*.spec.js
+lib/**/**.d.ts
+*.gif
+*.md
+test/
