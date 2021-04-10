@@ -1,0 +1,32 @@
+{
+  "name": "@divyanshu1610/chatter-common",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "Divyanshu Maurya <divyanshu1610@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc -w"
+  },
+  "dependencies": {
+    "figlet": "^1.5.0",
+    "kleur": "^4.1.4",
+    "minimist": "^1.2.5"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.5.0",
+    "@types/minimist": "^1.2.1"
+  }
+}
