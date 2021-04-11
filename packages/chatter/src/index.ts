@@ -1,16 +1,21 @@
 import clear from 'clear'
 import axios from 'axios'
-import readline from 'readline'
 
 import { logger } from '@divyanshu1610/chatter-common'
 
 import ChatterCLI, { RoomOps } from './ui/cli'
 import ChatterClient, { UpdateListener } from './core/client'
+import ChatWindow from './ui/chatWindow'
 
 class App implements UpdateListener {
   static readonly TITLE = 'Chatter'
   static readonly BANNER = 'A terminal chat application.'
-
+  private roomName: string
+  private client: ChatterClient | null
+  constructor() {
+    this.client = null
+    this.roomName = ChatterCLI.BACK
+  }
   onUpdate(type: logger.MessagePrefix, ...args: string[]): void {
     if (type === logger.MessagePrefix.INFO) return logger.showInfo(args[0])
     if (type === logger.MessagePrefix.ERROR) return logger.showError(args[0])
@@ -24,54 +29,64 @@ class App implements UpdateListener {
     const name = await cli.askName()
     const tenant = await cli.askTenantUrl('http://localhost:5000')
 
-    const client = new ChatterClient(name)
-    client.attachUpdateListener(this)
+    const c = new ChatterClient(name)
+    this.client = c
+    this.client.attachUpdateListener(this)
     const connect = await cli.showConnectOption()
     if (!connect) {
       logger.say('Goodbye !!')
       return
     }
 
-    await client.connect(tenant)
+    await this.client.connect(tenant)
 
-    let roomName = ChatterCLI.BACK
-
-    while (roomName === ChatterCLI.BACK) {
+    while (this.roomName === ChatterCLI.BACK) {
       clear()
       logger.showTitleAndBanner(App.TITLE, App.BANNER)
       const connectedOpts = await cli.showConnectedOptions()
 
       if (connectedOpts === RoomOps.DISCONNECT) {
         logger.say('Goodbye !!!')
-        return client.disconnect()
+        return this.client.disconnect()
       }
 
       if (connectedOpts === RoomOps.CREATE_ROOM) {
-        roomName = await cli.askRoomName()
+        this.roomName = await cli.askRoomName()
       } else if (connectedOpts === RoomOps.JOIN_ROOM) {
         const roomList: { rooms: Array<string> } =
-          client.tenantUrl &&
-          (await (await axios.get('/roomlist', { baseURL: client.tenantUrl }))
-            .data)
-        roomName = await cli.showRoomList(roomList.rooms)
+          this.client.tenantUrl &&
+          (await (
+            await axios.get('/roomlist', { baseURL: this.client.tenantUrl })
+          ).data)
+        this.roomName = await cli.showRoomList(roomList.rooms)
       }
     }
 
-    await client.joinRoom(roomName)
+    await this.client.joinRoom(this.roomName)
     clear()
-    // TODO: Show Chat Window
-    await this.showChatWindow(client)
+    await this.showChatWindow()
     return
   }
 
-  async showChatWindow(client: ChatterClient): Promise<void> {
+  onInput(input: string): void {
+    this.client?.sendMessage(this.roomName, input)
+  }
+
+  onClose(): void {
+    // TODO:
+  }
+
+  async showChatWindow(): Promise<void> {
     logger.showTitleAndBanner(App.TITLE, App.BANNER)
-    logger.say(`${client.name} : Connected`)
-    const r = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    })
-    readline.cursorTo(process.stdout, 10, 20)
+    const name: string = this.client?.name || ''
+    logger.say(`${name} : Connected`)
+    const chatWindow = new ChatWindow(
+      name,
+      (i: string) => this.onInput(i),
+      this.onClose,
+    )
+    this.client?.attachMessageListener(chatWindow)
+    chatWindow.promptInput()
   }
 }
 

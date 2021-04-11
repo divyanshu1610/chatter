@@ -5,11 +5,16 @@ export interface UpdateListener {
   onUpdate: (type: logger.MessagePrefix, ...args: string[]) => void
 }
 
+export interface MessageListener {
+  onMessageRecieved: (from: string, msg: string) => void
+}
+
 export default class ChatterClient {
   public readonly name: string
   private socket: SocketIOClient.Socket | null
   private tenantURL: string | null
-  private listener?: UpdateListener
+  private updateListener?: UpdateListener
+  private messageListener?: MessageListener
   static readonly JOIN_ROOM = 'room:join'
   static readonly LEAVE_ROOM = 'room:leave'
   static readonly RECIEVE_MSG = 'message:recieve'
@@ -24,7 +29,11 @@ export default class ChatterClient {
   }
 
   attachUpdateListener(listener: UpdateListener): void {
-    this.listener = listener
+    this.updateListener = listener
+  }
+
+  attachMessageListener(messageListener: MessageListener): void {
+    this.messageListener = messageListener
   }
 
   public get tenantUrl(): string | null {
@@ -56,7 +65,8 @@ export default class ChatterClient {
     this.socket?.on(
       ChatterClient.RECIEVE_MSG,
       (from: string, message: string) => {
-        this.listener?.onUpdate(logger.MessagePrefix.NONE, from, message)
+        // console.log('Clinet: ' + from + message)
+        this.messageListener?.onMessageRecieved(from, message)
       },
     )
   }
