@@ -5,15 +5,14 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["ES6", "ES2015", "ESNext"],
-    "outDir": "lib",
     "sourceMap": true,
-    "rootDir": "src",
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "importHelpers": true,
     "skipLibCheck": true,
-    "removeComments": true
+    "removeComments": true,
+    "declaration": true,
   }
 }

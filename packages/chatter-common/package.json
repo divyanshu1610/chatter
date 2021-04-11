@@ -17,6 +17,7 @@
     "access": "public"
   },
   "scripts": {
+    "clean":"rimraf lib",
     "build": "tsc",
     "build:watch": "tsc -w"
   },
