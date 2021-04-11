@@ -1,8 +1,8 @@
 import * as io from 'socket.io-client'
-import { MessagePrefix } from '@divyanshu1610/chatter-common'
+import { logger } from '@divyanshu1610/chatter-common'
 
 export interface UpdateListener {
-  onUpdate: (type: MessagePrefix, ...args: string[]) => void
+  onUpdate: (type: logger.MessagePrefix, ...args: string[]) => void
 }
 
 export default class ChatterClient {
@@ -56,7 +56,7 @@ export default class ChatterClient {
     this.socket?.on(
       ChatterClient.RECIEVE_MSG,
       (from: string, message: string) => {
-        this.listener?.onUpdate(MessagePrefix.NONE, from, message)
+        this.listener?.onUpdate(logger.MessagePrefix.NONE, from, message)
       },
     )
   }

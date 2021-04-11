@@ -1,6 +1,6 @@
 {
-  "exclude": ["node_modules", "lib", "__test__"],
   "compilerOptions": {
+    "outDir": "lib",
     "target": "ESNext",
     "module": "commonjs",
     "moduleResolution": "node",
@@ -13,6 +13,7 @@
     "importHelpers": true,
     "skipLibCheck": true,
     "removeComments": true,
-    "declaration": true,
+    "declaration":true,
+    "allowJs": false
   }
 }

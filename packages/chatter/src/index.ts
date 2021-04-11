@@ -2,13 +2,7 @@ import clear from 'clear'
 import axios from 'axios'
 import readline from 'readline'
 
-import {
-  MessagePrefix,
-  showError,
-  showInfo,
-  say,
-  showTitleAndBanner,
-} from '@divyanshu1610/chatter-common'
+import { logger } from '@divyanshu1610/chatter-common'
 
 import ChatterCLI, { RoomOps } from './ui/cli'
 import ChatterClient, { UpdateListener } from './core/client'
@@ -17,14 +11,15 @@ class App implements UpdateListener {
   static readonly TITLE = 'Chatter'
   static readonly BANNER = 'A terminal chat application.'
 
-  onUpdate(type: MessagePrefix, ...args: string[]): void {
-    if (type === MessagePrefix.INFO) return showInfo(args[0])
-    if (type === MessagePrefix.ERROR) return showError(args[0])
-    if (type === MessagePrefix.NONE) return say(args[1], { prefix: args[0] })
+  onUpdate(type: logger.MessagePrefix, ...args: string[]): void {
+    if (type === logger.MessagePrefix.INFO) return logger.showInfo(args[0])
+    if (type === logger.MessagePrefix.ERROR) return logger.showError(args[0])
+    if (type === logger.MessagePrefix.NONE)
+      return logger.say(args[1], { prefix: args[0] })
   }
 
   async start(): Promise<void> {
-    showTitleAndBanner(App.TITLE, App.BANNER)
+    logger.showTitleAndBanner(App.TITLE, App.BANNER)
     const cli = new ChatterCLI()
     const name = await cli.askName()
     const tenant = await cli.askTenantUrl('http://localhost:5000')
@@ -33,7 +28,7 @@ class App implements UpdateListener {
     client.attachUpdateListener(this)
     const connect = await cli.showConnectOption()
     if (!connect) {
-      say('Goodbye !!')
+      logger.say('Goodbye !!')
       return
     }
 
@@ -43,11 +38,11 @@ class App implements UpdateListener {
 
     while (roomName === ChatterCLI.BACK) {
       clear()
-      showTitleAndBanner(App.TITLE, App.BANNER)
+      logger.showTitleAndBanner(App.TITLE, App.BANNER)
       const connectedOpts = await cli.showConnectedOptions()
 
       if (connectedOpts === RoomOps.DISCONNECT) {
-        say('Goodbye !!!')
+        logger.say('Goodbye !!!')
         return client.disconnect()
       }
 
@@ -70,8 +65,8 @@ class App implements UpdateListener {
   }
 
   async showChatWindow(client: ChatterClient): Promise<void> {
-    showTitleAndBanner(App.TITLE, App.BANNER)
-    say(`${client.name} : Connected`)
+    logger.showTitleAndBanner(App.TITLE, App.BANNER)
+    logger.say(`${client.name} : Connected`)
     const r = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
