@@ -58,7 +58,7 @@ export default class ChatterClient {
   }
 
   disconnect(): void {
-    this.socket?.disconnect()
+    this.socket?.close()
   }
 
   private recieveMessage(): void {

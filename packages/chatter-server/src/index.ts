@@ -21,10 +21,13 @@ class App implements UpdateListener {
       //TODO: Show help
       return
     }
-
+    let PORT = port
+    if (process.env.PORT) {
+      PORT = +process.env.PORT
+    }
     clear()
     logger.showTitleAndBanner(App.TITLE, App.BANNER)
-    const server = new ChatterService(port)
+    const server = new ChatterService(PORT)
     server.attachUpdateListener(this)
     server.init()
     logger.showInfo('Server is starting up.....')
@@ -32,8 +35,13 @@ class App implements UpdateListener {
       .start()
       .then((serverInfo: ServerInfo) => {
         logger.showSuccess('Server is up and running...')
-        logger.showInfo(`Server Address: ${serverInfo?.address}`)
-        logger.showInfo(`Port: ${serverInfo.port}`)
+        let address = serverInfo?.address
+        const port = serverInfo.port
+        if (address === '::') {
+          address = `http://localhost:${port}`
+        }
+        logger.showInfo(`Server Address: ${address}`)
+        logger.showInfo(`Port: ${port}`)
       })
       .catch((e) => {
         logger.showError(e)

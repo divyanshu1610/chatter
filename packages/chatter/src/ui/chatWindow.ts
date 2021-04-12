@@ -1,11 +1,13 @@
 import readline from 'readline'
-import { green, yellow } from 'kleur'
+import { cyan, yellow, blue } from 'kleur'
 
 import { MessageListener } from '../core/client'
 
 export default class ChatWindow implements MessageListener {
   private name: string
   private onInput: (input: string) => void
+  private onClose: () => void
+  static readonly CLOSE = '/quit'
   private rl: readline.Interface
   constructor(
     name: string,
@@ -14,11 +16,11 @@ export default class ChatWindow implements MessageListener {
   ) {
     this.name = name
     this.onInput = onInput
+    this.onClose = onClose
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
     })
-    this.rl.on('close', onClose)
   }
   onMessageRecieved(from: string, msg: string): void {
     process.stdout.clearLine(0)
@@ -28,7 +30,11 @@ export default class ChatWindow implements MessageListener {
   }
 
   promptInput(): void {
-    this.rl.question(green(`[${this.name}]: `), (input: string) => {
+    this.rl.question(cyan(`[${this.name}]: `), (input: string) => {
+      if (input === ChatWindow.CLOSE) {
+        this.close()
+        return this.onClose()
+      }
       this.onInput(input)
       this.rl.prompt(true)
       this.promptInput()
@@ -36,7 +42,10 @@ export default class ChatWindow implements MessageListener {
   }
 
   private beautify(name: string, msg: string): string {
-    return yellow(`[${name}]`) + `: ${msg}`
+    if (name === 'Server') {
+      return yellow(`[${name}]`) + `: ${msg}`
+    }
+    return blue(`[${name}]`) + `: ${msg}`
   }
 
   close(): void {

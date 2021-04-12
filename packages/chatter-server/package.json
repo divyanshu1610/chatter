@@ -1,7 +1,7 @@
 {
   "name": "@divyanshu1610/chatter-server",
   "version": "1.0.0",
-  "description": "> TODO: description",
+  "description": "A terminal chat server",
   "author": "Divyanshu Maurya <divyanshu1610@gmail.com>",
   "homepage": "",
   "license": "ISC",
@@ -15,6 +15,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "bin":{
+    "chatter-server": "bin/chatter-server"
   },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1",

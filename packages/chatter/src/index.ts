@@ -12,9 +12,11 @@ class App implements UpdateListener {
   static readonly BANNER = 'A terminal chat application.'
   private roomName: string
   private client: ChatterClient | null
+  private chatWindow: ChatWindow | null
   constructor() {
     this.client = null
     this.roomName = ChatterCLI.BACK
+    this.chatWindow = null
   }
   onUpdate(type: logger.MessagePrefix, ...args: string[]): void {
     if (type === logger.MessagePrefix.INFO) return logger.showInfo(args[0])
@@ -72,21 +74,25 @@ class App implements UpdateListener {
     this.client?.sendMessage(this.roomName, input)
   }
 
-  onClose(): void {
-    // TODO:
+  close(): void {
+    this.client?.disconnect()
+    clear()
+    logger.showTitleAndBanner(App.TITLE, App.BANNER)
+    logger.say('Goodbye !!')
   }
 
   async showChatWindow(): Promise<void> {
     logger.showTitleAndBanner(App.TITLE, App.BANNER)
     const name: string = this.client?.name || ''
-    logger.say(`${name} : Connected`)
-    const chatWindow = new ChatWindow(
+    // logger.say(`${name} : Connected`)
+    logger.say('--------------------------------------------------')
+    this.chatWindow = new ChatWindow(
       name,
       (i: string) => this.onInput(i),
-      this.onClose,
+      () => this.close(),
     )
-    this.client?.attachMessageListener(chatWindow)
-    chatWindow.promptInput()
+    this.client?.attachMessageListener(this.chatWindow)
+    this.chatWindow.promptInput()
   }
 }
 

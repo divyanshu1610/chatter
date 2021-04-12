@@ -1,7 +1,7 @@
 {
   "name": "@divyanshu1610/chatter",
   "version": "1.0.0",
-  "description": "> TODO: description",
+  "description": "A terminal chat client..",
   "author": "Divyanshu Maurya <divyanshu1610@gmail.com>",
   "homepage": "",
   "license": "ISC",
@@ -9,6 +9,9 @@
   "directories": {
     "lib": "lib",
     "test": "__tests__"
+  },
+  "bin": {
+    "chatter":"bin/chatter"
   },
   "files": [
     "lib"
