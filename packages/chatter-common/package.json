@@ -1,6 +1,6 @@
 {
   "name": "@divyanshu1610/chatter-common",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "description": "> TODO: description",
   "author": "Divyanshu Maurya <divyanshu1610@gmail.com>",
   "homepage": "",
@@ -17,7 +17,7 @@
     "access": "public"
   },
   "scripts": {
-    "clean":"rimraf lib",
+    "clean": "rimraf lib",
     "build": "tsc",
     "build:watch": "tsc -w"
   },

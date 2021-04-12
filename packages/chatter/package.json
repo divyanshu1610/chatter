@@ -1,6 +1,6 @@
 {
   "name": "@divyanshu1610/chatter",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "description": "A terminal chat client..",
   "author": "Divyanshu Maurya <divyanshu1610@gmail.com>",
   "homepage": "",
@@ -11,7 +11,7 @@
     "test": "__tests__"
   },
   "bin": {
-    "chatter":"bin/chatter"
+    "chatter": "bin/chatter"
   },
   "files": [
     "lib"
@@ -27,7 +27,7 @@
     "start": "ts-node lib/index.js"
   },
   "dependencies": {
-    "@divyanshu1610/chatter-common": "^1.0.0",
+    "@divyanshu1610/chatter-common": "^1.0.1-alpha.0",
     "@types/clear": "^0.1.1",
     "axios": "^0.21.1",
     "clear": "^0.1.0",

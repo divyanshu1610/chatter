@@ -1,6 +1,6 @@
 {
   "name": "@divyanshu1610/chatter-server",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "description": "A terminal chat server",
   "author": "Divyanshu Maurya <divyanshu1610@gmail.com>",
   "homepage": "",
@@ -16,7 +16,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "bin":{
+  "bin": {
     "chatter-server": "bin/chatter-server"
   },
   "scripts": {
@@ -27,7 +27,7 @@
     "start": "ts-node lib/index.js serve --port=5000"
   },
   "dependencies": {
-    "@divyanshu1610/chatter-common": "^1.0.0",
+    "@divyanshu1610/chatter-common": "^1.0.1-alpha.0",
     "body-parser": "^1.19.0",
     "clear": "^0.1.0",
     "cors": "^2.8.5",
