@@ -16,7 +16,7 @@
     "clean": "lerna run clean",
     "test": "jest",
     "prepare": "husky install",
-    "prepublish": "lerna exec -- npm publish --dry-run"
+    "prepublishOnly": "lerna exec -- npm publish --dry-run"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.21.0",
