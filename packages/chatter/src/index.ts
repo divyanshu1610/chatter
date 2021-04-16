@@ -1,5 +1,6 @@
 import clear from 'clear'
 import axios from 'axios'
+import ora from 'ora'
 
 import { logger } from '@divyanshu1610/chatter-common'
 
@@ -40,7 +41,10 @@ class App implements UpdateListener {
       return
     }
 
-    await this.client.connect(tenant)
+    const spinner = ora('Connecting...').start()
+    await this.client.connect(tenant).then((_) => {
+      spinner.stop()
+    })
 
     while (this.roomName === ChatterCLI.BACK) {
       clear()
@@ -54,17 +58,22 @@ class App implements UpdateListener {
 
       if (connectedOpts === RoomOps.CREATE_ROOM) {
         this.roomName = await cli.askRoomName()
+        spinner.text = `Creating '${this.roomName}'...`
+        spinner.start()
       } else if (connectedOpts === RoomOps.JOIN_ROOM) {
+        spinner.text = 'Fetching room list...'
+        spinner.start()
         const roomList: { rooms: Array<string> } =
           this.client.tenantUrl &&
           (await (
             await axios.get('/roomlist', { baseURL: this.client.tenantUrl })
           ).data)
+        spinner.stop()
         this.roomName = await cli.showRoomList(roomList.rooms)
       }
     }
-
     await this.client.joinRoom(this.roomName)
+    spinner.stop()
     clear()
     await this.showChatWindow()
     return
